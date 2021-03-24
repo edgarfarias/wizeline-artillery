@@ -1,0 +1,51 @@
+config:
+  target: "https://api.todoist.com/rest/v1"
+  phases:
+    - duration: 1
+      arrivalRate: 1
+      name: single request
+  defaults:
+    headers:
+      Authorization: "Bearer {{ $processEnvironment.TOKEN}}"
+      Content-Type: application/json
+  processor: "./scripts/random-data.js"
+scenarios:
+  - name: "Full task lifecycle"
+    flow:
+      - get:
+          name: "Get all tasks"
+          url: /tasks
+
+      - function: "getRandomProduct"
+      - post:
+          name: "Create a new task"
+          url: /tasks
+          json:
+            content: "Buy {{ product }}"
+          capture:
+            json: $.id
+            as: id
+
+      - get:
+          name: "Get task"
+          url: "/tasks/{{ id }}"
+
+      - function: "getRandomProduct"
+      - post:
+          name: "Update task"
+          function: "getRandomProduct"
+          url: "/tasks/{{ id }}"
+          json:
+            content: "Buy {{ product }}"
+
+      - post:
+          name: "Close task"
+          url: "/tasks/{{ id }}/close"
+
+      - post:
+          name: "Re open task"
+          url: "/tasks/{{ id }}/reopen"
+
+      - delete:
+          name: "Delete task"
+          url: "/tasks/{{ id }}"

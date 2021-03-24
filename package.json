@@ -1,0 +1,16 @@
+{
+  "name": "wizeline-artillery",
+  "version": "1.0.0",
+  "description": "Performance testing challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "artillery run --output reports/report.json performance.yml && artillery report --output reports/report.html reports/report.json"
+  },
+  "author": "Edgar Farias",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "artillery": "^1.6.2",
+    "faker": "^5.4.0"
+  }
+}
